@@ -1,0 +1,4 @@
+C:\Users\Nelson Aguilar\Documents\AppAngels\ByAngelsApp\ByAngelsWeb\bin\Release\net10.0\publish\wwwroot\index.html
+C:\Users\Nelson Aguilar\Documents\AppAngels\ByAngelsApp\ByAngelsWeb\bin\Release\net10.0\publish\ByAngelsWeb.runtimeconfig.json
+C:\Users\Nelson Aguilar\Documents\AppAngels\ByAngelsApp\ByAngelsWeb\bin\Release\net10.0\publish\dotnet.js
+C:\Users\Nelson Aguilar\Documents\AppAngels\ByAngelsApp\ByAngelsWeb\bin\Release\net10.0\publish\web.config
