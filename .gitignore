@@ -1,0 +1,15 @@
+# Archivos de compilación y temporales
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# Específico para Web y Android
+dist/
+node_modules/
+publish/
+**/bin/
+**/obj/
