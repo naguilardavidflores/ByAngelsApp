@@ -519,8 +519,10 @@ select {
   background: var(--color-bg-base);
   width: 100%;
   max-width: 650px;
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
   border-radius: var(--radius-lg);
-  overflow: hidden;
+  overflow-y: auto;
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
@@ -708,8 +710,8 @@ select {
 /* Floating Music Player Widget */
 .music-player-floating {
   position: fixed;
-  bottom: 24px;
-  left: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  left: calc(24px + env(safe-area-inset-left));
   z-index: 400;
 }
 
@@ -1060,7 +1062,7 @@ select {
 
 /* Checkout Summary Section */
 .cart-summary {
-  padding: 24px;
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom)) 24px;
   border-top: 1px solid rgba(97, 64, 55, 0.1);
   background: rgba(253, 245, 242, 0.6);
   display: flex;
@@ -1128,10 +1130,13 @@ select {
 
   .app-container {
     height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
+    max-height: 100dvh;
     overflow: hidden;
     grid-template-columns: 1fr;
     grid-template-rows: 58vh 42vh;
+    grid-template-rows: 58dvh 42dvh;
     /* Model Display: 58%, Catalog: 42% */
   }
 
@@ -1177,7 +1182,7 @@ select {
 
   .right-panel {
     height: 100% !important;
-    padding: 8px 12px 12px 12px !important;
+    padding: 8px 12px calc(12px + env(safe-area-inset-bottom)) 12px !important;
     gap: 8px !important;
     overflow: hidden !important;
     /* Locks vertical scroll */
