@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://localhost:5000",
+  "apiUrl": "https://byangelsapis-production.up.railway.app",
   "whatsappNumber": "51900000000",
   "languages": {
     "es": {

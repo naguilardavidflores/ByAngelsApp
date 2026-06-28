@@ -104,6 +104,8 @@ function App() {
   const [musics, setMusics] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const apiBaseUrl = import.meta.env.VITE_API_URL || appConfig.apiUrl || 'http://localhost:5000';
+
   // Welcome Screen and Notice Modal state
   const [showWelcome, setShowWelcome] = useState(true);
   const [showNoticeModal, setShowNoticeModal] = useState(false);
@@ -133,7 +135,6 @@ function App() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const apiBaseUrl = appConfig.apiUrl || 'http://localhost:5000';
         
         // Fetch clothing articles
         const resShop = await fetch(`${apiBaseUrl}/api/shopreel`);
@@ -397,14 +398,14 @@ function App() {
       {/* News/Notice Reels Modal */}
       <NoticeModal
         visible={showNoticeModal}
-        apiUrl={appConfig.apiUrl}
+        apiUrl={apiBaseUrl}
         onClose={() => setShowNoticeModal(false)}
       />
 
       {/* Fullscreen Entry Screen */}
       {showWelcome && (
         <WelcomeScreen
-          apiUrl={appConfig.apiUrl}
+          apiUrl={apiBaseUrl}
           onEnter={() => {
             setShowWelcome(false);
             setShowNoticeModal(true);
