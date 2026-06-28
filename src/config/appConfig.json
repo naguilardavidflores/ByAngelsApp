@@ -1,6 +1,6 @@
 {
   "apiUrl": "https://byangelsapis-production.up.railway.app",
-  "whatsappNumber": "51900000000",
+  "whatsappNumber": "51900962934",
   "languages": {
     "es": {
       "searchPlaceholder": "Buscar...",
@@ -58,9 +58,21 @@
     }
   },
   "pricingRules": [
-    { "quantity": 12, "price": 330 },
-    { "quantity": 6, "price": 185 },
-    { "quantity": 5, "price": 155 },
-    { "quantity": 3, "price": 100 }
+    {
+      "quantity": 12,
+      "price": 330
+    },
+    {
+      "quantity": 6,
+      "price": 185
+    },
+    {
+      "quantity": 5,
+      "price": 155
+    },
+    {
+      "quantity": 3,
+      "price": 100
+    }
   ]
 }
