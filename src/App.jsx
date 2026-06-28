@@ -1,0 +1,419 @@
+import React, { useState, useEffect } from 'react';
+import appConfig from './config/appConfig.json';
+import SearchFilter from './components/SearchFilter';
+import ProductCard from './components/ProductCard';
+import MainModelDisplay from './components/MainModelDisplay';
+import ProductModal from './components/ProductModal';
+import MusicPlayer from './components/MusicPlayer';
+import Cart from './components/Cart';
+import WelcomeScreen from './components/WelcomeScreen';
+import NoticeModal from './components/NoticeModal';
+
+// Frontend double safety net - local fallback database if backend API is unreachable
+const LOCAL_FALLBACK_PRODUCTS = [
+  {
+    id: "prod_1",
+    Nombre: "Conjunto Urbano 1",
+    Categoria: "Casual",
+    Color: "Crema",
+    Precio: 40,
+    Nuevo: true,
+    Tendencia: true,
+    imgReel0: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop",
+    imgReel1: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop",
+    imgReel2: "https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=600&auto=format&fit=crop",
+    imgReel3: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&auto=format&fit=crop",
+    imgReel4: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&auto=format&fit=crop",
+    imgReel5: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop",
+    imgReel6: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&auto=format&fit=crop"
+  },
+  {
+    id: "prod_2",
+    Nombre: "Polera Streetwear Negra",
+    Categoria: "Streetwear",
+    Color: "Negro",
+    Precio: 38,
+    Nuevo: false,
+    Tendencia: true,
+    imgReel0: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
+    imgReel1: "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=600&auto=format&fit=crop",
+    imgReel2: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&auto=format&fit=crop",
+    imgReel3: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop",
+    imgReel4: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&auto=format&fit=crop",
+    imgReel5: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop",
+    imgReel6: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&auto=format&fit=crop"
+  },
+  {
+    id: "prod_3",
+    Nombre: "Conjunto Deportivo Athleisure",
+    Categoria: "Athleisure",
+    Color: "Plomo",
+    Precio: 40,
+    Nuevo: true,
+    Tendencia: false,
+    imgReel0: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop",
+    imgReel1: "https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=600&auto=format&fit=crop",
+    imgReel2: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&auto=format&fit=crop",
+    imgReel3: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop",
+    imgReel4: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop",
+    imgReel5: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&auto=format&fit=crop",
+    imgReel6: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=600&auto=format&fit=crop"
+  },
+  {
+    id: "prod_4",
+    Nombre: "Vestido Ribbed Knit",
+    Categoria: "Casual",
+    Color: "Marrón",
+    Precio: 38,
+    Nuevo: false,
+    Tendencia: false,
+    imgReel0: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&auto=format&fit=crop",
+    imgReel1: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&auto=format&fit=crop",
+    imgReel2: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop",
+    imgReel3: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&auto=format&fit=crop",
+    imgReel4: "https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=600&auto=format&fit=crop",
+    imgReel5: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop",
+    imgReel6: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?w=600&auto=format&fit=crop"
+  }
+];
+
+const LOCAL_FALLBACK_MUSICS = [
+  {
+    id: "song_1",
+    title: "Mientestanbonito Sin Voz",
+    artist: "ByAngels Boutique",
+    url: "https://raw.githubusercontent.com/naguilardavidflores/mi-musica-web/main/MientestanbonitoSinVoz.mp3"
+  },
+  {
+    id: "song_2",
+    title: "Lofi Dreams",
+    artist: "ByAngels Chill",
+    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+  },
+  {
+    id: "song_3",
+    title: "Vibrant Street",
+    artist: "ByAngels Beats",
+    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+  }
+];
+
+function App() {
+  const [language, setLanguage] = useState('es'); // Default is Spanish
+  const [products, setProducts] = useState([]);
+  const [musics, setMusics] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Welcome Screen and Notice Modal state
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [showNoticeModal, setShowNoticeModal] = useState(false);
+
+  // Filter & Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [styleFilter, setStyleFilter] = useState('');
+
+  // Selected Garment states
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedPoseIndex, setSelectedPoseIndex] = useState(0);
+
+  // Detail Modal product state
+  const [detailProduct, setDetailProduct] = useState(null);
+
+  // Music Player background states
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+
+  // Shopping Cart state
+  const [cart, setCart] = useState([]);
+  const [cartVisible, setCartVisible] = useState(false);
+
+  const activeLabels = appConfig.languages[language];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const apiBaseUrl = appConfig.apiUrl || 'http://localhost:5000';
+        
+        // Fetch clothing articles
+        const resShop = await fetch(`${apiBaseUrl}/api/shopreel`);
+        if (!resShop.ok) throw new Error('API server returned error code');
+        const shopData = await resShop.json();
+        setProducts(shopData);
+        
+        if (shopData.length > 0) {
+          setSelectedProductId(shopData[0].id);
+        }
+
+        // Fetch tracks
+        const resMusic = await fetch(`${apiBaseUrl}/api/Musics`);
+        if (resMusic.ok) {
+          const musicData = await resMusic.json();
+          // Mapeamos los campos del Firebase (NombreMusic y urlMusic) a la estructura del frontend (title, url)
+          const mappedMusicData = musicData.map((song) => {
+            let correctUrl = song.url || song.urlMusic || '';
+            // Si la URL es de GitHub en formato visual (blob), la transformamos automáticamente a Raw para que suene
+            if (correctUrl.includes('github.com') && correctUrl.includes('/blob/')) {
+              correctUrl = correctUrl
+                .replace('github.com', 'raw.githubusercontent.com')
+                .replace('/blob/', '/');
+            }
+            return {
+              id: song.id,
+              title: song.NombreMusic || song.title || 'Canción sin título',
+              artist: song.artist || 'ByAngels Boutique',
+              url: correctUrl
+            };
+          });
+          setMusics(mappedMusicData);
+          if (mappedMusicData.length > 0) {
+            const randomIdx = Math.floor(Math.random() * mappedMusicData.length);
+            setCurrentTrackIndex(randomIdx);
+            setIsPlayingMusic(true);
+          }
+        } else {
+          setMusics(LOCAL_FALLBACK_MUSICS);
+          if (LOCAL_FALLBACK_MUSICS.length > 0) {
+            const randomIdx = Math.floor(Math.random() * LOCAL_FALLBACK_MUSICS.length);
+            setCurrentTrackIndex(randomIdx);
+            setIsPlayingMusic(true);
+          }
+        }
+      } catch (err) {
+        console.warn('⚠️ API Connection failed. Running on local frontend safety fallback mock database.');
+        // If API fails, populate client with local data immediately
+        setProducts(LOCAL_FALLBACK_PRODUCTS);
+        setMusics(LOCAL_FALLBACK_MUSICS);
+        setSelectedProductId(LOCAL_FALLBACK_PRODUCTS[0].id);
+        if (LOCAL_FALLBACK_MUSICS.length > 0) {
+          const randomIdx = Math.floor(Math.random() * LOCAL_FALLBACK_MUSICS.length);
+          setCurrentTrackIndex(randomIdx);
+          setIsPlayingMusic(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Sync Selected Product changes to model poses array
+  const activeProduct = products.find(p => p.id === selectedProductId) || products[0];
+
+  // Model pose images
+  let activeProductPoses = activeProduct
+    ? [
+        activeProduct.imgReel1,
+        activeProduct.imgReel2,
+        activeProduct.imgReel3,
+        activeProduct.imgReel4,
+        activeProduct.imgReel5,
+        activeProduct.imgReel6
+      ].filter(Boolean)
+    : [];
+
+  if (activeProduct && activeProductPoses.length === 0 && activeProduct.imgReel0) {
+    activeProductPoses = [activeProduct.imgReel0];
+  }
+
+  // Filter products locally on client side for immediate smooth updates
+  const getFilteredProducts = () => {
+    let result = [...products];
+
+    // Filter by styles categories
+    if (styleFilter !== '') {
+      const filter = styleFilter.toLowerCase();
+      if (filter === 'nuevo') {
+        result = result.filter(p => 
+          p.Nuevo === true || 
+          p.Nuevo === 'true' || 
+          (typeof p.Nuevo === 'string' && (p.Nuevo.toLowerCase() === 'si' || p.Nuevo.toLowerCase() === 'yes' || p.Nuevo.toLowerCase() === 'true'))
+        );
+      } else if (filter === 'tendencia') {
+        result = result.filter(p => 
+          p.Tendencia === true || 
+          p.Tendencia === 'true' || 
+          (typeof p.Tendencia === 'string' && (p.Tendencia.toLowerCase() === 'si' || p.Tendencia.toLowerCase() === 'yes' || p.Tendencia.toLowerCase() === 'true'))
+        );
+      } else {
+        result = result.filter(p => p.Categoria && p.Categoria.toLowerCase() === filter);
+      }
+    }
+
+    // Filter by search string
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(p => p.Nombre && p.Nombre.toLowerCase().includes(q));
+    }
+
+    return result;
+  };
+
+  const filteredProductsList = getFilteredProducts();
+
+  // Add Item to Cart
+  const handleAddToCart = (productToAdd, size = 'M') => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.product.id === productToAdd.id && item.size === size);
+      if (existingItem) {
+        return prevCart.map(item => 
+          (item.product.id === productToAdd.id && item.size === size)
+            ? { ...item, quantity: Math.min(item.quantity + 1, 99) }
+            : item
+        );
+      } else {
+        return [...prevCart, { product: productToAdd, size, quantity: 1 }];
+      }
+    });
+    // Open cart drawer immediately for visual feedback
+    setCartVisible(true);
+  };
+
+  // Modify Cart Item quantity
+  const handleCartQuantityChange = (productId, size, newQuantity) => {
+    if (newQuantity <= 0) {
+      handleRemoveFromCart(productId, size);
+      return;
+    }
+    setCart(prevCart => 
+      prevCart.map(item => 
+        (item.product.id === productId && item.size === size)
+          ? { ...item, quantity: Math.min(newQuantity, 99) }
+          : item
+      )
+    );
+  };
+
+  // Remove Item from Cart
+  const handleRemoveFromCart = (productId, size) => {
+    setCart(prevCart => prevCart.filter(item => !(item.product.id === productId && item.size === size)));
+  };
+
+  // Calculate overall quantity count for badge indicator
+  const cartTotalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  return (
+    <main className="app-container">
+
+      {/* Left Panel: Active Garment Model Pose Display & Rotator */}
+      <MainModelDisplay
+        images={activeProductPoses}
+        currentPoseIndex={selectedPoseIndex}
+        brandName="Angel Girl"
+        language={language}
+        onPoseChange={(newPose) => setSelectedPoseIndex(newPose)}
+        onCartClick={() => setCartVisible(true)}
+        cartBadgeCount={cartTotalQuantity}
+        onLanguageToggle={() => setLanguage(language === 'es' ? 'en' : 'es')}
+        onNoticeClick={() => setShowNoticeModal(true)}
+      />
+
+      {/* Right Panel: Catalog, Search, and Audio Controls */}
+      <section className="right-panel">
+        
+        
+        {/* Search Bar & Styles Dropdown */}
+        <SearchFilter
+          searchValue={searchQuery}
+          selectedStyle={styleFilter}
+          placeholder={activeLabels.searchPlaceholder}
+          stylesLabel={activeLabels.stylesLabel}
+          allLabel={activeLabels.allStyles}
+          options={activeLabels.stylesList}
+          onSearchChange={(val) => setSearchQuery(val)}
+          onStyleChange={(val) => setStyleFilter(val)}
+        />
+
+        {loading ? (
+          <div style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent-light)' }}>
+            <h3>Loading Catalog...</h3>
+          </div>
+        ) : (
+          /* Clothing Reel Cards Grid */
+          <div className="catalog-grid">
+            {filteredProductsList.map((productItem) => (
+              <ProductCard
+                key={productItem.id}
+                text={productItem.Nombre}
+                price={productItem.Precio}
+                imageSource={productItem.imgReel0} // Uses 1st image for catalog card representation
+                isActive={productItem.id === selectedProductId}
+                isNew={productItem.Nuevo === true || productItem.Nuevo === 'true'}
+                newBadgeLabel={activeLabels.newBadge}
+                viewButtonLabel={activeLabels.viewButton}
+                onClick={() => {
+                  setSelectedProductId(productItem.id);
+                  setSelectedPoseIndex(0); // Reset pose index when switching garments
+                }}
+                onViewDetail={() => setDetailProduct(productItem)}
+              />
+            ))}
+
+            {filteredProductsList.length === 0 && (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: 'var(--color-accent-light)', opacity: 0.8 }}>
+                <h3>{language === 'es' ? 'No se encontraron prendas' : 'No clothing items found'}</h3>
+              </div>
+            )}
+          </div>
+        )}
+
+      </section>
+
+      {/* Floating Music Player Widget */}
+      <MusicPlayer
+        playlist={musics}
+        isPlaying={isPlayingMusic}
+        currentTrackIndex={currentTrackIndex}
+        language={language}
+        onPlayPauseChange={(playing) => setIsPlayingMusic(playing)}
+        onTrackIndexChange={(idx) => setCurrentTrackIndex(idx)}
+      />
+
+
+
+      {/* Slide-In Shopping Cart Drawer */}
+      <Cart
+        visible={cartVisible}
+        cartItems={cart}
+        language={language}
+        labels={activeLabels}
+        whatsappNumber={appConfig.whatsappNumber}
+        onQuantityChange={handleCartQuantityChange}
+        onRemove={handleRemoveFromCart}
+        onClose={() => setCartVisible(false)}
+      />
+
+      {/* Detailed Modal Carousel Slider */}
+      <ProductModal
+        visible={detailProduct !== null}
+        product={detailProduct}
+        language={language}
+        labels={activeLabels}
+        onClose={() => setDetailProduct(null)}
+        onCartAdded={handleAddToCart}
+      />
+
+      {/* News/Notice Reels Modal */}
+      <NoticeModal
+        visible={showNoticeModal}
+        apiUrl={appConfig.apiUrl}
+        onClose={() => setShowNoticeModal(false)}
+      />
+
+      {/* Fullscreen Entry Screen */}
+      {showWelcome && (
+        <WelcomeScreen
+          apiUrl={appConfig.apiUrl}
+          onEnter={() => {
+            setShowWelcome(false);
+            setShowNoticeModal(true);
+          }}
+        />
+      )}
+
+    </main>
+  );
+}
+
+export default App;

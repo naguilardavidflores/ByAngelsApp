@@ -1,0 +1,66 @@
+{
+  "apiUrl": "http://localhost:5000",
+  "whatsappNumber": "51900000000",
+  "languages": {
+    "es": {
+      "searchPlaceholder": "Buscar...",
+      "stylesLabel": "Estilos",
+      "viewButton": "Ver",
+      "newBadge": "Nuevo",
+      "cartAdd": "Agregar al Carrito",
+      "whatsappMessage": "Hola, quiero realizar el siguiente pedido:",
+      "musicPlayerTitle": "Reproductor de Música",
+      "cartTitle": "Carrito de Compras",
+      "cartEmpty": "Tu carrito está vacío",
+      "total": "Total",
+      "discount": "Descuento",
+      "originalTotal": "Total Original",
+      "checkoutButton": "Confirmar por WhatsApp",
+      "colorLabel": "Color",
+      "categoryLabel": "Categoría",
+      "priceLabel": "Precio",
+      "closeButton": "Cerrar",
+      "allStyles": "Todos los estilos",
+      "stylesList": {
+        "nuevo": "Nuevo",
+        "tendencia": "Tendencia",
+        "casual": "Casual",
+        "streetwear": "Streetwear",
+        "athleisure": "Athleisure"
+      }
+    },
+    "en": {
+      "searchPlaceholder": "Search...",
+      "stylesLabel": "Styles",
+      "viewButton": "View",
+      "newBadge": "NEW",
+      "cartAdd": "Add to Cart",
+      "whatsappMessage": "Hello, I want to place the following order:",
+      "musicPlayerTitle": "Music Player",
+      "cartTitle": "Shopping Cart",
+      "cartEmpty": "Your cart is empty",
+      "total": "Total",
+      "discount": "Discount",
+      "originalTotal": "Original Total",
+      "checkoutButton": "Confirm via WhatsApp",
+      "colorLabel": "Color",
+      "categoryLabel": "Category",
+      "priceLabel": "Price",
+      "closeButton": "Close",
+      "allStyles": "All styles",
+      "stylesList": {
+        "nuevo": "New",
+        "tendencia": "Trending",
+        "casual": "Casual",
+        "streetwear": "Streetwear",
+        "athleisure": "Athleisure"
+      }
+    }
+  },
+  "pricingRules": [
+    { "quantity": 12, "price": 330 },
+    { "quantity": 6, "price": 185 },
+    { "quantity": 5, "price": 155 },
+    { "quantity": 3, "price": 100 }
+  ]
+}
