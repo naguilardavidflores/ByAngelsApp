@@ -43,6 +43,10 @@
   padding: 0;
 }
 
+html {
+  overscroll-behavior-y: auto;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--color-bg-base);
@@ -85,7 +89,6 @@ select {
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
