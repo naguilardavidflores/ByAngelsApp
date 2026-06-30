@@ -98,10 +98,18 @@ const LOCAL_FALLBACK_MUSICS = [
   }
 ];
 
+const LOCAL_FALLBACK_NOTICES = [
+  'https://i.pinimg.com/736x/cb/c9/28/cbc928d11c002235c3c04b46c6530669.jpg',
+  'https://i.pinimg.com/736x/43/3e/49/433e49be9d2de6b7cbe3bebf78b278ec.jpg',
+  'https://i.pinimg.com/736x/cf/e6/78/cfe678d49a37c95e0c52bb744cf2fbdc.jpg'
+];
+
 function App() {
   const [language, setLanguage] = useState('es'); // Default is Spanish
   const [products, setProducts] = useState([]);
   const [musics, setMusics] = useState([]);
+  const [notices, setNotices] = useState([]);
+  const [noticesLoading, setNoticesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const apiBaseUrl = import.meta.env.VITE_API_URL || appConfig.apiUrl || 'http://localhost:5000';
@@ -135,6 +143,7 @@ function App() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setNoticesLoading(true);
         
         // Fetch clothing articles
         const resShop = await fetch(`${apiBaseUrl}/api/shopreel`);
@@ -150,10 +159,8 @@ function App() {
         const resMusic = await fetch(`${apiBaseUrl}/api/Musics`);
         if (resMusic.ok) {
           const musicData = await resMusic.json();
-          // Mapeamos los campos del Firebase (NombreMusic y urlMusic) a la estructura del frontend (title, url)
           const mappedMusicData = musicData.map((song) => {
             let correctUrl = song.url || song.urlMusic || '';
-            // Si la URL es de GitHub en formato visual (blob), la transformamos automáticamente a Raw para que suene
             if (correctUrl.includes('github.com') && correctUrl.includes('/blob/')) {
               correctUrl = correctUrl
                 .replace('github.com', 'raw.githubusercontent.com')
@@ -170,29 +177,54 @@ function App() {
           if (mappedMusicData.length > 0) {
             const randomIdx = Math.floor(Math.random() * mappedMusicData.length);
             setCurrentTrackIndex(randomIdx);
-            setIsPlayingMusic(true);
           }
         } else {
           setMusics(LOCAL_FALLBACK_MUSICS);
           if (LOCAL_FALLBACK_MUSICS.length > 0) {
             const randomIdx = Math.floor(Math.random() * LOCAL_FALLBACK_MUSICS.length);
             setCurrentTrackIndex(randomIdx);
-            setIsPlayingMusic(true);
           }
+        }
+
+        // Fetch weekly news/notices
+        const resNotice = await fetch(`${apiBaseUrl}/api/notice`);
+        if (resNotice.ok) {
+          const noticeData = await resNotice.json();
+          const extractedUrls = [];
+          if (noticeData && noticeData.length > 0) {
+            noticeData.forEach(doc => {
+              Object.keys(doc).forEach(key => {
+                if (key.startsWith('urlN') && doc[key]) {
+                  extractedUrls.push({
+                    key,
+                    url: doc[key]
+                  });
+                }
+              });
+            });
+            extractedUrls.sort((a, b) => {
+              const numA = parseInt(a.key.replace('urlN', ''), 10) || 0;
+              const numB = parseInt(b.key.replace('urlN', ''), 10) || 0;
+              return numA - numB;
+            });
+          }
+          setNotices(extractedUrls.map(item => item.url));
+        } else {
+          setNotices(LOCAL_FALLBACK_NOTICES);
         }
       } catch (err) {
         console.warn('⚠️ API Connection failed. Running on local frontend safety fallback mock database.');
-        // If API fails, populate client with local data immediately
         setProducts(LOCAL_FALLBACK_PRODUCTS);
         setMusics(LOCAL_FALLBACK_MUSICS);
+        setNotices(LOCAL_FALLBACK_NOTICES);
         setSelectedProductId(LOCAL_FALLBACK_PRODUCTS[0].id);
         if (LOCAL_FALLBACK_MUSICS.length > 0) {
           const randomIdx = Math.floor(Math.random() * LOCAL_FALLBACK_MUSICS.length);
           setCurrentTrackIndex(randomIdx);
-          setIsPlayingMusic(true);
         }
       } finally {
         setLoading(false);
+        setNoticesLoading(false);
       }
     };
 
@@ -398,7 +430,8 @@ function App() {
       {/* News/Notice Reels Modal */}
       <NoticeModal
         visible={showNoticeModal}
-        apiUrl={apiBaseUrl}
+        reels={notices}
+        loading={noticesLoading}
         onClose={() => setShowNoticeModal(false)}
       />
 
@@ -409,6 +442,10 @@ function App() {
           onEnter={() => {
             setShowWelcome(false);
             setShowNoticeModal(true);
+            // Autoplay music upon click on 'Entrar' (valid user gesture)
+            if (musics.length > 0) {
+              setIsPlayingMusic(true);
+            }
           }}
         />
       )}

@@ -1,58 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-export default function NoticeModal({ visible, onClose, apiUrl }) {
-  const [reels, setReels] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    const fetchNotices = async () => {
-      setLoading(true);
-      try {
-        const base = apiUrl || 'http://localhost:5000';
-        const res = await fetch(`${base}/api/notice`);
-        if (res.ok) {
-          const data = await res.json();
-          const extractedUrls = [];
-          
-          if (data && data.length > 0) {
-            data.forEach(doc => {
-              Object.keys(doc).forEach(key => {
-                if (key.startsWith('urlN') && doc[key]) {
-                  extractedUrls.push({
-                    key,
-                    url: doc[key]
-                  });
-                }
-              });
-            });
-
-            // Sort by key number: urlN0, urlN1, urlN2...
-            extractedUrls.sort((a, b) => {
-              const numA = parseInt(a.key.replace('urlN', ''), 10) || 0;
-              const numB = parseInt(b.key.replace('urlN', ''), 10) || 0;
-              return numA - numB;
-            });
-          }
-
-          setReels(extractedUrls.map(item => item.url));
-        }
-      } catch (err) {
-        console.warn('Could not load Notice reels, using fallbacks.', err);
-        setReels([
-          'https://i.pinimg.com/736x/cb/c9/28/cbc928d11c002235c3c04b46c6530669.jpg',
-          'https://i.pinimg.com/736x/43/3e/49/433e49be9d2de6b7cbe3bebf78b278ec.jpg',
-          'https://i.pinimg.com/736x/cf/e6/78/cfe678d49a37c95e0c52bb744cf2fbdc.jpg'
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNotices();
-  }, [visible, apiUrl]);
-
+export default function NoticeModal({ visible, onClose, reels = [], loading = false }) {
   if (!visible) return null;
 
   return (
