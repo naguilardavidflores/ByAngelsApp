@@ -20,7 +20,9 @@ function MainModelDisplay({
   onCartClick,
   cartBadgeCount = 0,
   onLanguageToggle,
-  onNoticeClick
+  onNoticeClick,
+  skinToneMode = 'clara',
+  onSkinToneToggle
 }) {
   // Fallback boutique background image
   const boutiqueBgUrl = 'https://images.unsplash.com/photo-1567401893930-7bec7b3b497f?w=1200&auto=format&fit=crop';
@@ -28,9 +30,14 @@ function MainModelDisplay({
   // Selected pose image
   const activeImage = (images && images.length > 0) ? images[currentPoseIndex % images.length] : null;
 
-  // Sequential rotation through all 6 poses (0 to 5)
+  // Sequential rotation through poses (0-2 for Clara, 3-5 for Morena)
   const handleRotatePose = () => {
-    const nextIndex = (currentPoseIndex + 1) % 6;
+    let nextIndex;
+    if (skinToneMode === 'clara') {
+      nextIndex = ((currentPoseIndex - 0 + 1) % 3) + 0;
+    } else {
+      nextIndex = ((currentPoseIndex - 3 + 1) % 3) + 3;
+    }
     if (onPoseChange) {
       onPoseChange(nextIndex);
     }
@@ -103,6 +110,14 @@ function MainModelDisplay({
             variant="rotate-icon"
             badge={cartBadgeCount}
             style={{ position: 'relative' }}
+          />
+
+          {/* Skin Tone Toggle Button - Mode Clara / Morena */}
+          <Button
+            onClick={onSkinToneToggle}
+            title={skinToneMode === 'clara' ? (language === 'es' ? 'Ver Tono Morena' : 'Switch to Brunette') : (language === 'es' ? 'Ver Tono Clara' : 'Switch to Light Skin')}
+            icon={skinToneMode === 'clara' ? '👩🏼' : '👩🏾'}
+            variant="rotate-icon"
           />
 
           {/* Rotate Button */}

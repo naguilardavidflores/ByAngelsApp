@@ -125,6 +125,7 @@ function App() {
   // Selected Garment states
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [selectedPoseIndex, setSelectedPoseIndex] = useState(0);
+  const [skinToneMode, setSkinToneMode] = useState('clara'); // 'clara' | 'morena'
 
   // Detail Modal product state
   const [detailProduct, setDetailProduct] = useState(null);
@@ -326,6 +327,14 @@ function App() {
   // Calculate overall quantity count for badge indicator
   const cartTotalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleSkinToneToggle = () => {
+    setSkinToneMode((prev) => {
+      const nextMode = prev === 'clara' ? 'morena' : 'clara';
+      setSelectedPoseIndex(nextMode === 'clara' ? 0 : 3);
+      return nextMode;
+    });
+  };
+
   return (
     <main className="app-container">
 
@@ -340,6 +349,8 @@ function App() {
         cartBadgeCount={cartTotalQuantity}
         onLanguageToggle={() => setLanguage(language === 'es' ? 'en' : 'es')}
         onNoticeClick={() => setShowNoticeModal(true)}
+        skinToneMode={skinToneMode}
+        onSkinToneToggle={handleSkinToneToggle}
       />
 
       {/* Right Panel: Catalog, Search, and Audio Controls */}
