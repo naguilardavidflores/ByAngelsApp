@@ -518,7 +518,7 @@ select {
 .modal-content {
   background: var(--color-bg-base);
   width: 100%;
-  max-width: 650px;
+  max-width: 460px;
   max-height: calc(100vh - 40px);
   max-height: calc(100dvh - 40px);
   border-radius: var(--radius-lg);
@@ -537,26 +537,28 @@ select {
 /* Modal Slider Carousel */
 .modal-slider {
   width: 100%;
+  height: 340px;
   position: relative;
   background: #f7eae5;
 }
 
 .slider-track-wrapper {
   width: 100%;
+  height: 100%;
   overflow: hidden;
   touch-action: pan-y;
 }
 
 .slider-track {
   display: flex;
+  height: 100%;
   transition: transform 0.4s ease-out;
 }
 
 .slider-slide {
   flex: 0 0 100%;
+  height: 100%;
   position: relative;
-  padding-top: 100%;
-  /* square ratio */
 }
 
 .slider-img {
@@ -2093,7 +2095,7 @@ select {
   100% { transform: translateX(6px); }
 }
 
-/* Floating Buy Button */
+/* Floating Buy Button - Bubble Theme */
 .btn-buy-floating {
   position: fixed;
   left: calc(24px + env(safe-area-inset-left));
@@ -2106,52 +2108,145 @@ select {
   height: 50px;
   padding: 0 22px;
   border-radius: 25px;
-  border: 2px solid var(--color-accent-light);
   font-family: var(--font-sans);
   font-weight: 800;
   font-size: 1rem;
   cursor: pointer;
-  box-shadow: var(--shadow-md);
-  transition: var(--transition-smooth);
-  color: var(--color-accent-light) !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(2px);
+  overflow: visible;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.4s ease, 
+              background 0.4s ease !important;
+  animation: bubbleFloat 4.5s ease-in-out infinite;
 }
 
-/* Plomo (gray) state when cart is empty */
+/* Stretched gloss reflections for pill shape */
+.btn-buy-floating::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 12%;
+  width: 76%;
+  height: 18%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.btn-buy-floating::after {
+  content: '';
+  position: absolute;
+  bottom: 12%;
+  right: 15%;
+  width: 14%;
+  height: 10%;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Position text and icon layers above bubble gloss */
+.btn-buy-floating i,
+.btn-buy-floating span {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.4s ease !important;
+}
+
+/* Plomo (gray/lead) soap bubble state when empty */
 .btn-buy-floating.empty {
-  background: #7a706c; /* Warm plomo */
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(232, 226, 222, 0.85) 30%,
+    rgba(182, 173, 169, 0.6) 60%,
+    rgba(255, 96, 173, 0.1) 80%,
+    rgba(166, 227, 233, 0.25) 100%
+  ) !important;
+  color: var(--color-accent-dark) !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(255, 96, 173, 0.15),
+    inset 2px 2px 6px rgba(166, 227, 233, 0.2),
+    inset 0 6px 8px rgba(255, 255, 255, 0.85),
+    var(--shadow-md) !important;
 }
 
 .btn-buy-floating.empty:hover {
-  background: #615754;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  transform: scale(1.05) translateY(-3px) !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(255, 96, 173, 0.25),
+    inset 2px 2px 6px rgba(166, 227, 233, 0.3),
+    inset 0 6px 8px rgba(255, 255, 255, 0.95),
+    0 10px 20px rgba(97, 64, 55, 0.15) !important;
 }
 
-/* Green state when cart has items */
+/* Green soap bubble state when items are in cart */
 .btn-buy-floating.has-items {
-  background: #27ae60; /* sage/emerald green */
-  animation: pulse-green 2s infinite alternate;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(220, 245, 225, 0.9) 35%,
+    rgba(160, 230, 180, 0.6) 65%,
+    rgba(39, 174, 96, 0.25) 85%,
+    rgba(166, 227, 233, 0.35) 100%
+  ) !important;
+  color: #1e6b38 !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(39, 174, 96, 0.3),
+    inset 2px 2px 6px rgba(166, 227, 233, 0.35),
+    inset 0 6px 8px rgba(255, 255, 255, 0.9),
+    var(--shadow-md) !important;
+  animation: bubbleFloat 4.5s ease-in-out infinite, pulse-green-glow 2s infinite alternate;
 }
 
 .btn-buy-floating.has-items:hover {
-  background: #219653;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 0 15px rgba(39, 174, 96, 0.4), var(--shadow-lg);
+  transform: scale(1.08) translateY(-4px) !important;
+  background: radial-gradient(
+    circle at 25% 25%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(225, 248, 230, 0.95) 35%,
+    rgba(170, 238, 190, 0.75) 65%,
+    rgba(39, 174, 96, 0.35) 85%,
+    rgba(166, 227, 233, 0.45) 100%
+  ) !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(39, 174, 96, 0.4),
+    inset 2px 2px 6px rgba(166, 227, 233, 0.45),
+    inset 0 6px 8px rgba(255, 255, 255, 0.95),
+    0 12px 24px rgba(39, 174, 96, 0.35) !important;
 }
 
-@keyframes pulse-green {
+@keyframes pulse-green-glow {
   0% {
-    box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4), var(--shadow-md);
+    box-shadow: 
+      inset -2px -2px 6px rgba(39, 174, 96, 0.3),
+      inset 2px 2px 6px rgba(166, 227, 233, 0.35),
+      inset 0 6px 8px rgba(255, 255, 255, 0.9),
+      0 4px 10px rgba(39, 174, 96, 0.15);
   }
   100% {
-    box-shadow: 0 0 12px 4px rgba(39, 174, 96, 0.2), var(--shadow-md);
+    box-shadow: 
+      inset -2px -2px 6px rgba(39, 174, 96, 0.3),
+      inset 2px 2px 6px rgba(166, 227, 233, 0.35),
+      inset 0 6px 8px rgba(255, 255, 255, 0.9),
+      0 8px 20px rgba(39, 174, 96, 0.45);
   }
 }
 
 .btn-buy-floating:active {
-  transform: translateY(1px);
+  transform: scale(0.95) translateY(1px) !important;
+  box-shadow: 
+    inset -1px -1px 4px rgba(255, 96, 173, 0.2),
+    inset 1px 1px 4px rgba(166, 227, 233, 0.25),
+    inset 0 4px 6px rgba(255, 255, 255, 0.8),
+    0 4px 8px rgba(97, 64, 55, 0.1) !important;
 }
 
 /* Mobile overrides for Buy and Music Floating buttons */
@@ -2164,6 +2259,14 @@ select {
     bottom: calc(42dvh + 12px) !important;
     left: calc(12px + env(safe-area-inset-left)) !important;
     border-radius: 18px !important;
+  }
+  
+  .btn-buy-floating::before {
+    top: 10% !important;
+    left: 12% !important;
+    width: 76% !important;
+    height: 18% !important;
+    border-radius: 8px !important;
   }
   
   .music-player-floating {
