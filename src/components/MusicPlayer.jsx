@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Button from './common/Button';
+
 
 /**
  * MusicPlayer Component
@@ -157,14 +159,14 @@ function MusicPlayer({
   return (
     <div className="music-player-floating" ref={playerRef}>
       {/* Floating neon toggle button */}
-      <button 
+      <Button 
         type="button" 
+        variant="rotate-icon"
         className={`music-toggle-btn ${isPlaying ? 'playing' : ''}`}
         onClick={() => setPanelOpen(!panelOpen)}
         title={language === 'es' ? 'Reproductor de Música' : 'Music Player'}
-      >
-        🎵
-      </button>
+        icon="🎵"
+      />
 
       {/* Control Panel Panel */}
       <div className={`music-player-panel ${panelOpen ? 'active' : ''}`}>
