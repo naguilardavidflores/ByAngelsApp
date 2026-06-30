@@ -1157,10 +1157,17 @@ select {
     gap: 4px !important;
   }
 
-  .btn-rotate-pose-icon {
+  .common-button--rotate-icon,
+  .common-button--lang-icon {
     width: 36px !important;
     height: 36px !important;
-    border-radius: 50% !important;
+  }
+  .common-button--rotate-icon i,
+  .common-button--lang-icon i {
+    font-size: 0.95rem !important;
+  }
+  .common-button--lang-icon span {
+    font-size: 0.55rem !important;
   }
 
   .pose-indicator {
@@ -1442,45 +1449,179 @@ select {
   background: rgba(97, 64, 55, 0.2);
 }
 
-.common-button--rotate-icon {
-  background: var(--color-accent-light);
-  border: 1px solid rgba(97, 64, 55, 0.25);
+.common-button--rotate-icon,
+.common-button--lang-icon {
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.85) 30%,
+    rgba(255, 240, 245, 0.6) 60%,
+    rgba(255, 96, 173, 0.15) 85%,
+    rgba(166, 227, 233, 0.35) 100%
+  ) !important;
+  color: var(--color-accent-dark) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
   width: 44px;
   height: 44px;
   border-radius: 50% !important;
-  box-shadow: var(--shadow-md);
   padding: 0 !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(255, 96, 173, 0.25),
+    inset 2px 2px 6px rgba(166, 227, 233, 0.3),
+    inset 0 6px 8px rgba(255, 255, 255, 0.85),
+    var(--shadow-md) !important;
+  backdrop-filter: blur(2px);
+  position: relative;
+  overflow: visible;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.4s ease, 
+              background 0.4s ease !important;
 }
 
-.common-button--rotate-icon:hover:not(:disabled) {
-  background: var(--color-accent-dark);
-  transform: scale(1.06);
+/* Glossy reflection bubble effects */
+.common-button--rotate-icon::before,
+.common-button--lang-icon::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 18%;
+  width: 32%;
+  height: 16%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-.common-button--rotate-icon:hover:not(:disabled) i {
-  color: var(--color-accent-light) !important;
+.common-button--rotate-icon::after,
+.common-button--lang-icon::after {
+  content: '';
+  position: absolute;
+  bottom: 12%;
+  right: 18%;
+  width: 18%;
+  height: 9%;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: rotate(35deg);
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Position icon and text layers above bubble gloss */
+.common-button--rotate-icon i,
+.common-button--lang-icon i,
+.common-button--lang-icon span {
+  position: relative;
+  z-index: 2;
+  color: var(--color-accent-dark) !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.4s ease !important;
 }
 
 .common-button--lang-icon {
-  background: var(--color-accent-light);
-  border: 1px solid rgba(97, 64, 55, 0.25);
-  width: 44px;
-  height: 44px;
-  border-radius: 50% !important;
-  box-shadow: var(--shadow-md);
-  padding: 0 !important;
   flex-direction: column !important;
   gap: 2px !important;
 }
 
-.common-button--lang-icon:hover:not(:disabled) {
-  background: var(--color-accent-dark);
-  transform: scale(1.06);
+.common-button--lang-icon span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
-.common-button--lang-icon:hover:not(:disabled) span,
-.common-button--lang-icon:hover:not(:disabled) i {
-  color: var(--color-accent-light) !important;
+/* Hover state: Bubble expansion + subtle neon pink aura glow */
+.common-button--rotate-icon:hover:not(:disabled),
+.common-button--lang-icon:hover:not(:disabled) {
+  transform: scale(1.15) translateY(-3px) !important;
+  box-shadow: 
+    inset -2px -2px 6px rgba(255, 96, 173, 0.35),
+    inset 2px 2px 6px rgba(166, 227, 233, 0.45),
+    inset 0 6px 8px rgba(255, 255, 255, 0.95),
+    0 10px 20px rgba(255, 96, 173, 0.25),
+    0 4px 10px rgba(97, 64, 55, 0.15) !important;
+  background: radial-gradient(
+    circle at 25% 25%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 30%,
+    rgba(255, 240, 245, 0.7) 55%,
+    rgba(255, 96, 173, 0.25) 80%,
+    rgba(166, 227, 233, 0.45) 100%
+  ) !important;
+}
+
+.common-button--rotate-icon:hover:not(:disabled)::before,
+.common-button--lang-icon:hover:not(:disabled)::before {
+  transform: rotate(-15deg) scale(1.1) translate(-1px, -1px);
+}
+
+/* Active squish bubble click effect */
+.common-button--rotate-icon:active,
+.common-button--lang-icon:active {
+  transform: scale(0.92) translateY(1px) !important;
+  box-shadow: 
+    inset -1px -1px 4px rgba(255, 96, 173, 0.3),
+    inset 1px 1px 4px rgba(166, 227, 233, 0.4),
+    inset 0 4px 6px rgba(255, 255, 255, 0.8),
+    0 4px 8px rgba(97, 64, 55, 0.1) !important;
+}
+
+/* Staggered float animation for the overlay controls */
+.pose-rotator-overlay > button:nth-child(1) {
+  animation: bubbleFloat 4.2s ease-in-out infinite;
+}
+.pose-rotator-overlay > button:nth-child(2) {
+  animation: bubbleFloat 4.6s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+.pose-rotator-overlay > button:nth-child(3) {
+  animation: bubbleFloat 3.8s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+.pose-rotator-overlay > button:nth-child(4) {
+  animation: bubbleFloat 4.4s ease-in-out infinite;
+  animation-delay: 1.8s;
+}
+
+@keyframes bubbleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Icon hover animations */
+.common-button--rotate-icon:hover:not(:disabled) i.fa-rotate {
+  transform: rotate(180deg);
+}
+
+@keyframes bellRing {
+  0%, 100% { transform: rotate(0); }
+  20%, 60% { transform: rotate(15deg); }
+  40%, 80% { transform: rotate(-15deg); }
+}
+.common-button--rotate-icon:hover:not(:disabled) i.fa-bell {
+  animation: bellRing 0.6s ease-in-out;
+}
+
+@keyframes cartBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.common-button--rotate-icon:hover:not(:disabled) i.fa-basket-shopping {
+  animation: cartBounce 0.6s ease-in-out;
+}
+
+@keyframes globeSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.common-button--lang-icon:hover:not(:disabled) i.fa-globe {
+  animation: globeSpin 1.2s linear;
 }
 
 .common-button--blank {
