@@ -2092,3 +2092,82 @@ select {
   0% { transform: translateX(0); }
   100% { transform: translateX(6px); }
 }
+
+/* Floating Buy Button */
+.btn-buy-floating {
+  position: fixed;
+  left: calc(24px + env(safe-area-inset-left));
+  bottom: calc(24px + 50px + 12px + env(safe-area-inset-bottom)); /* 86px, above music player button */
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 22px;
+  border-radius: 25px;
+  border: 2px solid var(--color-accent-light);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+  color: var(--color-accent-light) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Plomo (gray) state when cart is empty */
+.btn-buy-floating.empty {
+  background: #7a706c; /* Warm plomo */
+}
+
+.btn-buy-floating.empty:hover {
+  background: #615754;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Green state when cart has items */
+.btn-buy-floating.has-items {
+  background: #27ae60; /* sage/emerald green */
+  animation: pulse-green 2s infinite alternate;
+}
+
+.btn-buy-floating.has-items:hover {
+  background: #219653;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 15px rgba(39, 174, 96, 0.4), var(--shadow-lg);
+}
+
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4), var(--shadow-md);
+  }
+  100% {
+    box-shadow: 0 0 12px 4px rgba(39, 174, 96, 0.2), var(--shadow-md);
+  }
+}
+
+.btn-buy-floating:active {
+  transform: translateY(1px);
+}
+
+/* Mobile overrides for Buy and Music Floating buttons */
+@media (max-width: 767px) {
+  .btn-buy-floating {
+    height: 36px !important;
+    padding: 0 14px !important;
+    font-size: 0.8rem !important;
+    bottom: calc(42vh + 12px) !important; /* aligned with rotar overlay bottom */
+    bottom: calc(42dvh + 12px) !important;
+    left: calc(12px + env(safe-area-inset-left)) !important;
+    border-radius: 18px !important;
+  }
+  
+  .music-player-floating {
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    left: calc(12px + env(safe-area-inset-left)) !important;
+  }
+}

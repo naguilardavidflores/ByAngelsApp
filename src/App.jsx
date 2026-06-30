@@ -393,6 +393,18 @@ function App() {
 
       </section>
 
+      {/* Floating Buy Button */}
+      {!showWelcome && (
+        <button
+          type="button"
+          className={`btn-buy-floating ${cart.length === 0 ? 'empty' : 'has-items'}`}
+          onClick={() => setCartVisible(true)}
+        >
+          <i className="fa-solid fa-cart-shopping"></i>
+          <span>{language === 'es' ? 'Comprar' : 'Buy'}</span>
+        </button>
+      )}
+
       {/* Floating Music Player Widget */}
       <MusicPlayer
         playlist={musics}
