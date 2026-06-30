@@ -106,7 +106,7 @@ function MainModelDisplay({
           <Button
             onClick={onCartClick}
             title={language === 'es' ? 'Ver Carrito' : 'View Cart'}
-            icon="fa-solid fa-basket-shopping"
+            icon="fa-solid fa-cart-shopping"
             variant="rotate-icon"
             badge={cartBadgeCount}
             style={{ position: 'relative' }}
